@@ -1,0 +1,8 @@
+immutable_var = (45, "Johan", True, 6.9)
+print(immutable_var)
+
+#immutable_var[1] = "Tommy" # Ошибка, т.к. кортеж относится к неизменяемым типам
+
+mutable_list = list(immutable_var)
+mutable_list[1] = "Tommy"
+print(mutable_list)
