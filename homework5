@@ -1,0 +1,20 @@
+# lists
+my_list = ["Peach", "Orange", "Pear", "Banana", "Apple", "Plum", "Pineapple"]
+print("list: ", my_list)
+print("First element: ", my_list[0])
+print("Last element: ", my_list[-1])
+print("Modified list: ", my_list[2:6])
+my_list[2] = "Cherry"
+print(my_list)
+print()
+
+# dictionaries
+my_dict = {"Peach": "Персик",
+           "Orange": "Апельсин",
+           "Pear": "Груша",
+           "Banana": "Банан",
+           "Apple": "Яблоко"}
+print("Dictionary: ", my_dict)
+print("Translation: ", my_dict["Banana"])
+my_dict["Banana"] = "Желтый, вытянутый, сладкий фрукт"
+print("Modified dictionary: ", my_dict)
