@@ -96,13 +96,12 @@ count_of_my_pets = 34
 if count_of_my_pets > 10:
     print('I need more space for my pets!')
 
-my_favorite_pets_and_bird = ['cat', 'wolf', 'ostrich']
-if 'lion' in my_favorite_pets_and_bird:
+my_favorite_pets_and_bird = ['cat', 'wolf', 'ostrich']     # (я бы сократил названия переменных.. но в этом случае не знаю как лучше) 
+if 'lion' in my_favorite_pets_and_bird:                    # - // -
     print('Wow!')
 
-my_favorite_pets_and_birds = ['cat', 'wolf', 'ostrich']
+my_favorite_pets_and_birds = ['cat', 'wolf', 'ostrich']    # (исправил: добавил символы "_" и изменил регистр заглавий слов)
 # но такой стиль используется для названий классов
-# (исправил: добавил символы "_" и изменил регистр заглавий слов)
 
 
 # рекомендации PEP8
