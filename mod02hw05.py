@@ -8,3 +8,4 @@ def print_params(param1):
 # 2. Вызовите данную функцию несколько раз в том же файле
 print_params('Вызов функции 1')
 print_params(12345)
+print_params([5, 6, 7])
