@@ -4,12 +4,12 @@ RANGE_MAX = 20
 while True:
     key = input('Введите число от 3 до 20 или 0 для завершения: ')
 
+    if not key:
+        key = '0'
+
     if not key.isnumeric():
-        if not key:
-            key = '0'
-        else:
-            print('Неверный формат числа')
-            continue
+        print('Неверный формат числа')
+        continue
 
     key = int(key)
 
