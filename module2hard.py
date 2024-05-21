@@ -15,7 +15,7 @@ while True:
         print('Число вне диапазона')
         continue
 
-    print(fr'Пароль для числа {key} - ', end='')
+    print(f'Пароль для числа {key} - ', end='')
     for i in range(1, key):
         for j in range(1, key):
             if key % (i + j) == 0 and i != j and i < j:
