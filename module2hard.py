@@ -8,7 +8,7 @@ while True:
         key = '0'
 
     if not key.isnumeric():
-        print('Неверный формат числа')
+        print('Неверный формат числа\n')
         continue
 
     key = int(key)
@@ -18,7 +18,7 @@ while True:
         break
 
     if not (RANGE_MIN <= key <= RANGE_MAX):
-        print('Число вне диапазона')
+        print('Число вне диапазона\n')
         continue
 
     print(f'Пароль для числа {key} - ', end='')
