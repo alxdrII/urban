@@ -24,7 +24,7 @@ while True:
     print(f'Пароль для числа {key} - ', end='')
     for i in range(1, key):
         for j in range(1, key):
-            if key % (i + j) == 0 and i != j and i < j:
+            if key % (i + j) == 0 and i < j:
                 print(i, j, end='', sep='')
 
     print('\n')
