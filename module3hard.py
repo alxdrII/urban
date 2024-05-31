@@ -11,13 +11,7 @@ def calculate_structure_sum(*args):
         elif isinstance(values, str):
             result += len(values)
 
-        elif isinstance(values, list):
-            result += calculate_structure_sum(*values)
-
-        elif isinstance(values, tuple):
-            result += calculate_structure_sum(*values)
-
-        elif isinstance(values, set):
+        elif type(values) in (list, tuple, set):
             result += calculate_structure_sum(*values)
 
         elif isinstance(values, dict):
