@@ -26,12 +26,25 @@ class TreeObj:
 class DecisionTree:
     @classmethod
     def predict(cls, root, x):
-        obj = root
-        # for i in range(3):
-        #     obj = obj.left if i else obj.right
-            
+        # obj = root
+        # if x[0]:
+        #     obj = obj.left
+        #     if x[1]:
+        #         obj = obj.left
+        #     else:
+        #         obj = obj.right
+        # else:
+        #     obj = obj.right
+        #     if x[2]:
+        #         obj = obj.left
+        #     else:
+        #         obj = obj.right
 
-        return obj.value
+        if root.value:
+            return root.value
+        else:
+            return cls.predict(cls, root.left if x[root.indx] == True , x)
+        # return obj.value
 
     @classmethod
     def add_obj(cls, obj, node=None, left=True):
