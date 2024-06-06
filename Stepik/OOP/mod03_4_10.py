@@ -4,16 +4,19 @@ class MaxPooling:
         self.size = size
 
     def __call__(self, matrix, *args, **kwargs):
-        is_err = False
-        if len(matrix) != len(matrix[0]):
-            is_err = True
-
         check_value = [isinstance(x, int) for row in matrix for x in row]
-        if is_err or (not all(check_value)):
+        if not (len(matrix) == len(matrix[0]) and all(check_value)):
             raise ValueError("Неверный формат для первого параметра matrix.")
 
-        print("OK")
+        # parts_x = len(matrix) // self.step[0]
+        # parts_y = len(matrix) // self.step[0]
+
+        result = []
+        for y in range(0, len(matrix), self.step[1]):
+            result.append([])
+            for x in range(0, len(matrix), self.step[0]):
+                result[].append()
 
 
-sp = MaxPooling()
-dd = sp([[1, 1], [5, 5], [5, 5]])
+mp = MaxPooling(step=(2, 2), size=(2,2))
+res = mp([[1, 2, 3, 4], [5, 6, 7, 8], [9, 8, 7, 6], [5, 4, 3, 2]])    # [[6, 8], [9, 7]]
