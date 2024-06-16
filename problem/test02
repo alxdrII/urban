@@ -1,0 +1,55 @@
+from typing import Optional
+
+# Definition for singly-linked list.
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+
+class Solution:
+    def addTwoNumbers(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:
+        if l1 is None or l2 is None:
+            return None
+
+        return self.int_to_list(self.list_to_int(l1) + self.list_to_int(l2))
+        #return self.list_to_int(l1) + self.list_to_int(l2)
+
+    @staticmethod
+    def list_to_int(list_: ListNode) -> int:
+        def list_to_str(l: ListNode):
+            if l.next is None:
+                return str(l.val)
+            else:
+                return list_to_str(l.next) + str(l.val)
+
+        return int(list_to_str(list_))
+
+    @staticmethod
+    def int_to_list(num: int) -> ListNode:
+        # result = ListNode()
+        # ln = result
+        # for n in str(num)[::-1]:
+        #     ln.val = int(n)
+        # 
+        #     ln.next = ListNode()
+        #     ln = ln.next
+        
+        result = None
+        for n in str(num)[::-1]:
+            
+
+
+        return result
+
+
+l1 = ListNode(1)
+l1.next = ListNode(5)
+
+l2 = ListNode(1)
+l2.next = ListNode(5)
+
+sol = Solution()
+nnn = sol.addTwoNumbers(l1, l2)
+print(nnn)
+
