@@ -18,11 +18,11 @@ class Video:
         self.time_now = time_now
         self.adult_mode = adult_mode
 
-    # def __eq__(self, other):
-    #     return self.title.upper() == other.title.upper()
-    #
-    # def __hash__(self):
-    #     return hash(self.title.upper())
+    def __eq__(self, other):
+        return self.title.upper() == other.title.upper()
+
+    def __hash__(self):
+        return hash(self.title.upper())
 
     def __contains__(self, item):
         print("__contains__")
@@ -75,6 +75,5 @@ class UrTube:
         return result
 
     def watch_video(self, video_name):
-        pass
-
-
+        video_find = Video(video_name, 0)
+        print(self.videos.index(video_find))
