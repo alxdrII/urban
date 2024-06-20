@@ -1,3 +1,6 @@
+from time import sleep
+
+
 class User:
     def __init__(self, nickname, password, age):
         self.nickname = nickname
@@ -10,13 +13,16 @@ class User:
     def __eq__(self, other):
         return self.nickname == other.nickname
 
+    def __repr__(self):
+        return self.nickname
+
 
 class Video:
     def __init__(self, title, duration, time_now=0, adult_mode=False):
         self.title = title
-        self.duration = duration
-        self.time_now = time_now
-        self.adult_mode = adult_mode
+        self.duration = duration      # продолжительность, секунды
+        self.time_now = time_now      # секунда остановки
+        self.adult_mode = adult_mode  # ограничение по возрасту
 
     def __eq__(self, other):
         return self.title.upper() == other.title.upper()
@@ -25,9 +31,11 @@ class Video:
         return hash(self.title.upper())
 
     def __contains__(self, item):
-        print("__contains__")
         if item.upper() in self.title.upper():
             return True
+
+    def __repr__(self):
+        return f"'{self.title}'"
 
 
 class UrTube:
@@ -63,7 +71,7 @@ class UrTube:
             if not isinstance(obj, Video):
                 continue
 
-            if not obj in self.videos:
+            if not (obj in self.videos):
                 self.videos.append(obj)
 
     def get_videos(self, find_str: str) -> list:
@@ -76,4 +84,25 @@ class UrTube:
 
     def watch_video(self, video_name):
         video_find = Video(video_name, 0)
-        print(self.videos.index(video_find))
+        if not self.current_user:
+            print("Войдите в аккаунт, чтобы смотреть видео")
+            return
+
+        if not (video_find in self.videos):
+            return
+
+        index = self.videos.index(video_find)
+        video = self.videos[index]
+        self.show(video, self.current_user.age)
+
+    def show(self, video: Video, user_age: int):
+        if video.adult_mode and user_age < 18:
+            print("Вам нет 18 лет, пожалуйста покиньте страницу")
+            return
+
+        for i in range(video.time_now+1, video.duration+1):
+            print(i, end=" ")
+            sleep(1)
+
+        video.time_now = 0
+        print("Конец видео")
