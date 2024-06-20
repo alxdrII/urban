@@ -46,13 +46,19 @@ class UrTube:
 
     def log_in(self, login, password):
         user_new = User(login, password, 0)
-        for user in self.users:
-            if user == user_new and hash(user.password) == hash(password):
+        if user_new in self.users:
+            index = self.users.index(user_new)
+            user = self.users[index]
+            
+            if user.password == hash(password):
                 self.current_user = user
-                break
-
+                
+            else:
+                print("Неверный пароль")
+                
         else:
             print(f"Пользователя {login} не существует")
+
 
     def register(self, nickname, password, age):
         user_new = User(nickname, password, age)
