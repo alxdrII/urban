@@ -8,9 +8,7 @@ class Plant:
 
 class Flower(Plant):
     """ Цветок """
-    
-    def __init__(self, name, edible=False):
-        super().__init__(name, edible)
+    pass
 
 
 class Fruit(Plant):
