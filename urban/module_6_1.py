@@ -8,12 +8,14 @@ class Plant:
 
 class Flower(Plant):
     """ Цветок """
+    
     def __init__(self, name, edible=False):
         super().__init__(name, edible)
 
 
 class Fruit(Plant):
     """ Фрукт """
+    
     def __init__(self, name, edible=True):
         super().__init__(name, edible)
 
