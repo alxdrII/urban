@@ -44,7 +44,7 @@ class Warehouse:
         self.content = content  # Количество того чего храним на данном складе
         self.road_out = None    # дорога
         self.queue_in = []      # очередь из пустых машин готовых для загрузки
-        self.queue_out = []     # очередь из машин загруженных, готовых к отправке
+        self.queue_out = []     # очередь из машин готовых к отправке
 
     def __str__(self):
         return 'Склад {} груза {}'.format(self.name, self.content)
@@ -87,14 +87,14 @@ class Vehicle:
 
 
 class Truck(Vehicle):
-    fuel_rate = 50
+    fuel_rate = 50  # трата доплива за 1 раз (цикл, час..)
 
     def __init__(self, model, body_space=1000):
         super().__init__(model=model)
-        self.body_space = body_space
+        self.body_space = body_space  # Грузовместимость
         self.cargo = 0
-        self.velocity = 100
-        self.place = None
+        self.velocity = 100  # Скорость движения км/час
+        self.place = None    # текущее местонахождение (дорога или склад)
         self.distance_to_target = 0
 
     def __str__(self):
@@ -107,8 +107,8 @@ class Truck(Vehicle):
             self.distance_to_target -= self.velocity
             print('{} едет по дороге, осталось {}'.format(self.model, self.distance_to_target))
         else:
-            self.place = self.place.end
-            self.place.truck_arrived(self)
+            self.place = self.place.end   # Конечная точка назначения дороги - склад
+            self.place.truck_arrived(self) # регистрируемся на складе на который прибыли
             print('{} доехал '.format(self.model))
 
     def go_to(self, road):
