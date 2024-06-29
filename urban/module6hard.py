@@ -4,25 +4,48 @@ from math import pi
 class Figure:
     sides_count = 0
 
-    def __init__(self, color, *args):
-        self.__color = []  # (список цветов в формате RGB)
-        self.__sides = []  # (список сторон(целые числа))
+    def __init__(self, color, *sides):
+        if not self.__is_valid_color(color):
+            raise ValueError('Неверные параметры цвета')
+
+        self.__color = color  # (список цветов в формате RGB)
+        if self.__is_valid_sides(sides):
+            self.__sides = sides  # (список сторон(целые числа))
+        else:
+            self.__sides = tuple(1 for _ in range(self.sides_count))
+
         self.filled = True # закрашенный
 
     def get_color(self):
-        return self.__color
+        return list(self.__color)
 
-    def __is_valid_color(self, r, g, b):
-        pass
+    def __is_valid_color(self, color):
+        if not (isinstance(color, tuple) and len(color) == 3):
+            return False
+
+        for i in color:
+            if not (isinstance(i, int) and 0 <= i <= 255):
+                return False
+
+        return True
 
     def set_color(self, r, g, b):
-        pass
+        color = r, g, b
+        if self.__is_valid_color(color):
+            self.__color = color
 
-    def __is_valid_sides(self, *args):
-        pass
+    def __is_valid_sides(self, sides):
+        if len(sides) == self.sides_count and all([isinstance(x, int) and x > 0 for x in sides]):
+            return True
+        else:
+            return False
+
+    def set_sides(self, *sides):
+        if self.__is_valid_sides(sides):
+            self.__sides = sides
 
     def get_sides(self):
-        return self.__sides
+        return list(self.__sides)
 
     def __len__(self):
         return sum(self.__sides)
@@ -31,9 +54,9 @@ class Figure:
 class Circle(Figure):
     sides_count = 1
 
-    def __init__(self, color, circum):
-        super().__init__()
-        self.__radius = circum / 2 / pi
+    def __init__(self, color, *sides):
+        super().__init__(color, *sides)
+        self.__radius = self.get_sides()[0] / 2 / pi
 
     def get_square(self):
         return pi * self.__radius ** 2
@@ -42,24 +65,61 @@ class Circle(Figure):
 class Triangle(Figure):
     sides_count = 3
 
-    def __init__(self, color, side):
-        super().__init__()
-        self.__height = 0
+    def __init__(self, color, *sides):
+        super().__init__(color, *sides)
+        if not self.is_triangle(sides):
+            raise ValueError('Стороны не являются треугольником!')
+
+        self.__height = self.height_triangle(sides[2])
+
+    @staticmethod
+    def is_triangle(sides):
+        a, b, c = sides
+        if a + b > c and a + c > b and b + c > a:
+            return True
+        else:
+            return False
+
+    def set_sides(self, *sides):
+        super().set_sides(*sides)
+        if not self.is_triangle(sides):
+            raise ValueError('Фигура не является треугольником!')
+
+    def get_square(self):
+        """
+        Вычисляем площадь по формуле Герона: S = √(р (р — а)(р — b)(p — c)),
+        где a, b и с — значения длин сторон, р — половина периметра.
+
+        """
+        p = len(self) / 2
+        sides = self.get_sides()
+        return (p * (p - sides[0]) * (p - sides[1]) * (p - sides[2])) ** 0.5
+
+    def height_triangle(self, base: int):
+        """Вычисляем высоту через площадь и длинну стророны треугольника"""
+
+        if base in self.get_sides():
+            return 2 * self.get_square() / base
+        else:
+            raise ValueError('Значение не является базой треугольника')
 
 
 class Cube(Figure):
     sides_count = 12
     
-    def __init__(self, color, side):
-        super().__init__(color)
-        self.__sides = [side for _ in range(12)]
+    def __init__(self, color, *sides):
+        if len(sides) == 1:
+            sides = [sides[0] for _ in range(12)]
+
+        super().__init__(color, *sides)
 
     def get_volume(self):
-        return self.__sides[0] ** 3
+        return self.get_sides()[0] ** 3
 
 
 circle1 = Circle((200, 200, 100), 10) # (Цвет, стороны)
 cube1 = Cube((222, 35, 130), 6)
+trang1 = Triangle((10, 55, 255), 5, 8, 9)
 
 # Проверка на изменение цветов:
 circle1.set_color(55, 66, 77) # Изменится
@@ -78,3 +138,8 @@ print(len(circle1))
 
 # Проверка объёма (куба):
 print(cube1.get_volume())
+
+# Проверка сторон и площади треугольника
+print(trang1.get_sides())
+print(trang1.get_square())
+trang1.set_sides(1, 10, 1) # Ошибка: фигура не треугольник
