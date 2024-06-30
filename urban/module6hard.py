@@ -75,10 +75,7 @@ class Triangle(Figure):
     @staticmethod
     def is_triangle(sides):
         a, b, c = sides
-        if a + b > c and a + c > b and b + c > a:
-            return True
-        else:
-            return False
+        return a + b > c and a + c > b and b + c > a
 
     def set_sides(self, *sides):
         super().set_sides(*sides)
