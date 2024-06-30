@@ -9,7 +9,7 @@ class Figure:
             raise ValueError('Неверные параметры цвета')
 
         self.__color = color  # (список цветов в формате RGB)
-        
+
         if self.__is_valid_sides(sides):
             self.__sides = sides  # (список сторон(целые числа))
         else:
@@ -22,14 +22,7 @@ class Figure:
 
     @staticmethod
     def __is_valid_color(color):
-        if not (isinstance(color, tuple) and len(color) == 3):
-            return False
-
-        for i in color:
-            if not (isinstance(i, int) and 0 <= i <= 255):
-                return False
-
-        return True
+        return isinstance(color, tuple) and len(color) == 3 and all(isinstance(x, int) and 0 <= x <= 255 for x in color)
 
     def set_color(self, r, g, b):
         color = r, g, b
@@ -37,7 +30,7 @@ class Figure:
             self.__color = color
 
     def __is_valid_sides(self, sides):
-        return len(sides) == self.sides_count and all([isinstance(x, int) and x > 0 for x in sides])
+        return len(sides) == self.sides_count and all(isinstance(x, int) and x > 0 for x in sides)
 
     def set_sides(self, *sides):
         if self.__is_valid_sides(sides):
