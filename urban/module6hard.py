@@ -9,17 +9,19 @@ class Figure:
             raise ValueError('Неверные параметры цвета')
 
         self.__color = color  # (список цветов в формате RGB)
+        
         if self.__is_valid_sides(sides):
             self.__sides = sides  # (список сторон(целые числа))
         else:
             self.__sides = tuple(1 for _ in range(self.sides_count))
 
-        self.filled = True # закрашенный
+        self.filled = True  # закрашенный
 
     def get_color(self):
         return list(self.__color)
 
-    def __is_valid_color(self, color):
+    @staticmethod
+    def __is_valid_color(color):
         if not (isinstance(color, tuple) and len(color) == 3):
             return False
 
@@ -35,10 +37,7 @@ class Figure:
             self.__color = color
 
     def __is_valid_sides(self, sides):
-        if len(sides) == self.sides_count and all([isinstance(x, int) and x > 0 for x in sides]):
-            return True
-        else:
-            return False
+        return len(sides) == self.sides_count and all([isinstance(x, int) and x > 0 for x in sides])
 
     def set_sides(self, *sides):
         if self.__is_valid_sides(sides):
@@ -103,7 +102,7 @@ class Triangle(Figure):
 
 class Cube(Figure):
     sides_count = 12
-    
+
     def __init__(self, color, *sides):
         if len(sides) == 1:
             sides = [sides[0] for _ in range(12)]
@@ -114,19 +113,19 @@ class Cube(Figure):
         return self.get_sides()[0] ** 3
 
 
-circle1 = Circle((200, 200, 100), 10) # (Цвет, стороны)
+circle1 = Circle((200, 200, 100), 10)  # (Цвет, стороны)
 cube1 = Cube((222, 35, 130), 6)
 trang1 = Triangle((10, 55, 255), 5, 8, 9)
 
 # Проверка на изменение цветов:
-circle1.set_color(55, 66, 77) # Изменится
-cube1.set_color(300, 70, 15) # Не изменится
+circle1.set_color(55, 66, 77)  # Изменится
+cube1.set_color(300, 70, 15)  # Не изменится
 print(circle1.get_color())
 print(cube1.get_color())
 
 # Проверка на изменение сторон:
-cube1.set_sides(5, 3, 12, 4, 5) # Не изменится
-circle1.set_sides(15) # Изменится
+cube1.set_sides(5, 3, 12, 4, 5)  # Не изменится
+circle1.set_sides(15)  # Изменится
 print(cube1.get_sides())
 print(circle1.get_sides())
 
@@ -139,4 +138,4 @@ print(cube1.get_volume())
 # Проверка сторон и площади треугольника
 print(trang1.get_sides())
 print(trang1.get_square())
-trang1.set_sides(1, 10, 1) # Ошибка: фигура не треугольник
+trang1.set_sides(1, 10, 1)  # Ошибка: фигура не треугольник
