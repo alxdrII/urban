@@ -19,13 +19,16 @@ class Shop:
         return txt
 
     def add(self, *products):
-        file = open(self.__file_name, "w")
+        txt_file = self.get_products()
+        file = open(self.__file_name, "a")
         for product in products:
-            file.write(str(product) + '\n')
+            if product.name in txt_file:
+                print(f'Продукт {product.name} уже есть в магазине')
+            else:
+                txt_file += product.name
+                file.write(str(product) + '\n')
 
         file.close()
-
-
 
 
 s1 = Shop()
