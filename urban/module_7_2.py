@@ -1,15 +1,10 @@
 def custom_write(file_name, strings):
     control_write = {}
-    count = 0
 
-    file = open(file_name, "w", encoding="utf-8")
-
-    for string in strings:
-        count += 1
-        control_write[(count, file.tell())] = string
-        file.write(string + "\n")
-
-    file.close()
+    with open(file_name, "w", encoding="utf-8") as file:
+        for index, string in enumerate(strings, start=1):
+            control_write[(index, file.tell())] = string
+            file.write(string + "\n")
 
     return control_write
 
