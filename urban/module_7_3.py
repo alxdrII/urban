@@ -27,7 +27,7 @@ class WordsFinder:
 
         return result
 
-    def count(self, word) -> dict:
+    def count(self, word: str) -> dict:
         word = word.lower()
         all_words = self.get_all_words()
         result = {}
