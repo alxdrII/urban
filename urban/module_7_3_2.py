@@ -17,24 +17,24 @@ class WordsFinder:
 
         return all_words
 
-    def __func(self, word: str, fn="index"):
+    def __func(self, word, func) -> dict:
         word = word.lower()
         all_words = self.get_all_words()
         result = {}
         for file_name in self.file_names:
             if word in all_words[file_name]:
-                if fn == "index":
-                    result[file_name] = all_words[file_name].index(word) + 1
-
-                elif fn == "count":
-                    result[file_name] = all_words[file_name].count(word)
+                result[file_name] = getattr(all_words[file_name], func)(word)
 
         return result
 
-    def find(self, word: str) -> dict:
-        return self.__func(word, 'index')
+    def find(self, word: str):
+        result = self.__func(word, 'index')
+        for key in result:
+            result[key] += 1
 
-    def count(self, word: str) -> dict:
+        return result
+
+    def count(self, word: str):
         return self.__func(word, 'count')
 
 
