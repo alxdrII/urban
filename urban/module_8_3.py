@@ -1,12 +1,12 @@
 class IncorrectVinNumber(Exception):
     def __init__(self, message):
-        super().__init__()
+        #super().__init__()
         self.message = message
 
 
 class IncorrectCarNumbers(Exception):
     def __init__(self, message):
-        super().__init__()
+        #super().__init__()
         self.message = message
 
 
