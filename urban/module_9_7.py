@@ -1,5 +1,5 @@
 def is_prime(func):
-    def wrappeer(*args, **kwargs):
+    def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
         this_prime = True
         if result not in (-1, 0, 1):
@@ -12,7 +12,7 @@ def is_prime(func):
 
         return result
 
-    return wrappeer
+    return wrapper
 
 
 @is_prime
