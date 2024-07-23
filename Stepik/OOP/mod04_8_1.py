@@ -38,8 +38,8 @@ class Link:
         return self._dist
 
     def __eq__(self, other):
-        print(other.v1)
-        return (self.v1 == other.v1 or self.v1 == other.v2) and (self.v2 == other.v1 or self.v2 == other.v2) and self.dist == other.dist
+        return (self.v1 == other.v1 or self.v1 == other.v2) \
+            and (self.v2 == other.v1 or self.v2 == other.v2) and self.dist == other.dist
 
     def __hash__(self):
         return hash((hash(self.v1) * hash(self.v2), self.dist))
@@ -59,7 +59,7 @@ class LinkedGraph:
 
     def add_vertex(self, v):
         if v not in self._vertex:
-            self.add_link(v)
+            self._vertex.append(v)
 
     def add_link(self, link):
         if link not in self._links:
