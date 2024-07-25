@@ -6,8 +6,6 @@ def all_variants(text):
             yield text[i:ln+i]
 
 
-all_variants("abc")
-
 a = all_variants("abc")
 for i in a:
     print(i)
