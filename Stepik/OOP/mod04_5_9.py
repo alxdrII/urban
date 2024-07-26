@@ -15,5 +15,10 @@ class PointTrack:
         return f"PointTrack: {self._x}, {self._y}"
 
 
+class Track:
+    """класс для представления маршрутов в навигаторе"""
+
+
+
 p = PointTrack(4, 5.5)
 print(p)
