@@ -3,7 +3,6 @@ from threading import Thread, Lock
 
 class BankAccount:
     def __init__(self, balance=0):
-        super().__init__()
         self.__balance = balance
         self.__lock = Lock()
 
