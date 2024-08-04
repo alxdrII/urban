@@ -8,7 +8,7 @@
 """
 from queue import Queue
 from time import sleep
-from threading import Thread
+from threading import Thread, Lock
 
 
 class Table:
@@ -35,13 +35,20 @@ class Cafe:
     def __init__(self, tables):
         self.tables = tables
         self.queue = Queue()
+        self.__lock = Lock()
 
     def customer_arrival(self, quantity=20):
         """моделирует приход посетителя (каждую секунду)"""
 
         for i in range(1, quantity+1):
-            print(f"Посетитель номер {i} прибыл")
-            self.serve_customer(Customer(i))
+            customer = Customer(i)
+            # with self.__lock:
+            #     self.queue.put(customer)
+            print(f"Посетитель номер {customer.id} прибыл")
+            self.serve_customer(customer)
+
+            # customer_service = Thread(target=self.serve_customer, args=())
+
             sleep(1)
 
     def serve_customer(self, customer):
@@ -51,10 +58,19 @@ class Cafe:
         начинает обслуживание посетителя (запуск потока),
         в противном случае - посетитель поступает в очередь.
         Время обслуживания 5 секунд."""
-        if
 
+        free_table = next((x for x in self.tables if not x.is_busy), None)
 
+        if free_table:
+            free_table.is_busy = True
+            print(f"Посетитель номер {customer.id} сел за стол {free_table.number}")
+            sleep(5)
+            free_table.is_busy = False
+            print(f"Посетитель номер {customer.id} покушал и ушёл")
 
+        else:
+            self.queue.put(customer)
+            print(f"Посетитель номер {customer.id} ожидает свободный стол")
 
 
 # ------------------------- test --------------
