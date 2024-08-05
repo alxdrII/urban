@@ -23,11 +23,26 @@ class Table:
         return self.__number
 
 
-class Customer:
+class Customer(Thread):
     """класс (поток) посетителя. Запускается, если есть свободные столы."""
 
-    def __init__(self, id: int):
+    def __init__(self, id: int, cafe, table: Table = None):
+        super().__init__()
         self.id = id
+        self.cafe = cafe
+        self.table = table
+
+    def run(self):
+        self.table.is_busy = True
+        print(f"Посетитель номер {self.id} сел за стол {self.table.number}")
+        sleep(5)
+        self.table.is_busy = False
+        print(f"Посетитель номер {self.id} покушал и ушёл")
+        with self.cafe.lock:
+            if not self.cafe.queue.empty():
+                new_customer = self.cafe.queue.get()
+                self.cafe.serve_customer(new_customer)
+
 
 class Cafe:
     """класс для симуляции процессов в кафе"""
@@ -35,20 +50,15 @@ class Cafe:
     def __init__(self, tables):
         self.tables = tables
         self.queue = Queue()
-        self.__lock = Lock()
+        self.lock = Lock()
 
     def customer_arrival(self, quantity=20):
         """моделирует приход посетителя (каждую секунду)"""
 
         for i in range(1, quantity+1):
-            customer = Customer(i)
-            # with self.__lock:
-            #     self.queue.put(customer)
+            customer = Customer(i, cafe=self)
             print(f"Посетитель номер {customer.id} прибыл")
             self.serve_customer(customer)
-
-            # customer_service = Thread(target=self.serve_customer, args=())
-
             sleep(1)
 
     def serve_customer(self, customer):
@@ -62,14 +72,13 @@ class Cafe:
         free_table = next((x for x in self.tables if not x.is_busy), None)
 
         if free_table:
-            free_table.is_busy = True
-            print(f"Посетитель номер {customer.id} сел за стол {free_table.number}")
-            sleep(5)
-            free_table.is_busy = False
-            print(f"Посетитель номер {customer.id} покушал и ушёл")
+            customer.table = free_table
+            customer.start()
 
         else:
-            self.queue.put(customer)
+            with self.lock:
+                self.queue.put(customer)
+                
             print(f"Посетитель номер {customer.id} ожидает свободный стол")
 
 
