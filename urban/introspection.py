@@ -1,5 +1,4 @@
 import inspect
-from pprint import pprint
 from random import choice
 
 
@@ -32,13 +31,11 @@ class Cat:
 
 
 def introspection_info(obj):
-
-    info = {}
-    info['name'] = getattr(obj, "__name__", None)
-    info['module'] = getattr(obj, "__module__", None)
-    info['type'] = type(obj)
-    info['functions'] = [x[0] for x in inspect.getmembers(obj, inspect.isfunction)]
-    info['methods'] = [x[0] for x in inspect.getmembers(obj, inspect.ismethod)]
+    info = {'name': getattr(obj, "__name__", None),
+            'module': getattr(obj, "__module__", None),
+            'type': type(obj),
+            'functions': [x[0] for x in inspect.getmembers(obj, inspect.isfunction)],
+            'methods': [x[0] for x in inspect.getmembers(obj, inspect.ismethod)]}
 
     return info
 
