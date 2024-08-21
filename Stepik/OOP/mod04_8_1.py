@@ -37,6 +37,10 @@ class Link:
     def dist(self):
         return self._dist
 
+    @dist.setter
+    def dist(self, value):
+        self._dist = value
+
     def __eq__(self, other):
         return (self.v1 == other.v1 or self.v1 == other.v2) \
             and (self.v2 == other.v1 or self.v2 == other.v2) and self.dist == other.dist
