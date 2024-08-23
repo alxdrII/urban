@@ -103,13 +103,17 @@ class GamePole:
 
         shuffle(len_ships)    # перемешиваем для рандомности, но можно и без этого
 
-        # размещаем случайно корабли на поле
         self._ships.clear()
+
+        # формируем список кораблей с учетом столкновений и выхода за пределы поля
+        mx = self._size - 1
         for i in len_ships:
-            x = randint(0, self._size-1)
-            y = randint(0, self._size-1)
-
-
+            ship_is_no_fit = True
+            while ship_is_no_fit:
+                ship_new = Ship(i, randint(1, 2), x=randint(0, mx), y=randint(0, mx))
+                if all(not (ship_new.is_out_pole(self._size) or ship_new.is_collide(ship)) for ship in self._ships):
+                    self._ships.append(ship_new)
+                    ship_is_no_fit = False # выходим из цикла while
 
     def get_ships(self):
         return self._ships
