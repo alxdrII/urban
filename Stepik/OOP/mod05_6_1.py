@@ -1,3 +1,6 @@
+from random import randint, shuffle
+
+
 class Ship:
     """Корабль"""
 
@@ -45,8 +48,23 @@ class Ship:
 
         """
         o_x, o_y = other.get_start_coords()
-        o_tp = other.tp
-        pass
+        # область чувствительности корабля
+        x1, y1 = self._x - 1, self._y - 1
+        x2, y2 = self._x + self._length if self._tp == 1 else 1, self._y + self._length if self._tp == 2 else 1
+
+        result = False
+
+        for i in range(len(other)):
+            if other.tp == 1:
+                if x1 <= o_x + i <= x2 and y1 <= o_y <= y2:
+                    result = True
+                    break
+            elif other.tp == 2:
+                if x1 <= o_x <= x2 and y1 <= o_y + i <= y2:
+                    result = True
+                    break
+
+        return result
 
     def is_out_pole(self, size):
         """
@@ -71,7 +89,27 @@ class GamePole:
         self._ships = []
 
     def init(self):
-        pass
+        """
+        начальная инициализация игрового поля; здесь создается список из кораблей (объектов класса Ship):
+        однопалубных - 4; двухпалубных - 3; трехпалубных - 2; четырехпалубный - 1 (ориентация этих кораблей
+        должна быть случайной).
+
+        """
+        # создаем предварительный список размеров кораблей
+        len_ships = []
+        for i in range(1, 5):
+            for k in range(i, 5):
+                len_ships.append(i)
+
+        shuffle(len_ships)    # перемешиваем для рандомности, но можно и без этого
+
+        # размещаем случайно корабли на поле
+        self._ships.clear()
+        for i in len_ships:
+            x = randint(0, self._size-1)
+            y = randint(0, self._size-1)
+
+
 
     def get_ships(self):
         return self._ships
