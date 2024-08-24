@@ -1,3 +1,4 @@
+import copy
 from random import randint, shuffle
 
 
@@ -67,7 +68,7 @@ class Ship:
         возвращается True, если корабль вышел из игрового поля и False - в противном случае
 
         """
-        return self._x < 0 or self._y < 0 or self._x + self._length >= size or self._y + self._length >= size
+        return self._x < 0 or self._y < 0 or (self._x + self._length) > size or (self._y + self._length) > size
 
     def __getitem__(self, item):
         return self._cells[item]
@@ -99,7 +100,7 @@ class GamePole:
             for k in range(i, 5):
                 len_ships.append(i)
 
-        shuffle(len_ships)    # перемешиваем для рандомности, но можно и без этого
+        len_ships.reverse()    # расмещаем начиная с самого большого корабля
 
         self._ships.clear()
 
@@ -109,7 +110,8 @@ class GamePole:
             ship_is_no_fit = True
             while ship_is_no_fit:
                 ship_new = Ship(i, randint(1, 2), x=randint(0, mx), y=randint(0, mx))
-                if all(not (ship_new.is_out_pole(self._size) or ship_new.is_collide(ship)) for ship in self._ships):
+                # если корабль не выходит за пределы поля и не столкнулся с другими кораблями, то признаем его годным
+                if not (ship_new.is_out_pole(self._size) or any(ship_new.is_collide(ship) for ship in self._ships)):
                     self._ships.append(ship_new)
                     ship_is_no_fit = False # выходим из цикла while
 
@@ -121,7 +123,18 @@ class GamePole:
         в направлении ориентации корабля; если перемещение в выбранную сторону невозможно (другой корабль или
         пределы игрового поля), то попытаться переместиться в противоположную сторону, иначе (если перемещения
         невозможны), оставаться на месте;"""
-        pass
+        for ship in self._ships:
+            ship_new = copy.deepcopy(ship)
+            ship_new.move(1)
+            if not (ship_new.is_out_pole(self._size) or any(ship_new.is_collide(s) for s in self._ships if s != ship)):
+                ship.move(1)
+                continue
+
+            ship_new = copy.deepcopy(ship)
+            ship_new.move(-1)
+            if not (ship_new.is_out_pole(self._size) or any(ship_new.is_collide(s) for s in self._ships if s != ship)):
+                ship.move(-1)
+                continue
 
     def show(self):
         pole = self.get_pole()
@@ -148,4 +161,6 @@ class GamePole:
 gp = GamePole(10)
 gp.init()
 gp.show()
-print(len(gp.get_ships()))
+gp.move_ships()
+print()
+gp.show()
