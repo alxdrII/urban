@@ -9,13 +9,8 @@ class Ship:
         self._tp = tp  # ориентация корабля: 1 - горизонтальная (x); 2 - вертикальная (y)
         self._x = x
         self._y = y
-        self.is_move = True
+        self._is_move = True
         self._cells = [1] * length  # попадания: 1 - небыло; 2 - было
-
-    def __setattr__(self, key, value):
-        if key == '_cells' and self.is_move and value == 2:
-            # при попадании, корабль перестаёт двигаться
-            self.is_move = False
 
     def __len__(self):
         return self._length
@@ -35,7 +30,7 @@ class Ship:
         (go = 1 - движение в одну сторону на клетку; go = -1 - движение в другую сторону
         на одну клетку); движение возможно только если флаг _is_move = True"""
 
-        if self.is_move:
+        if self._is_move:
             x = go if self._tp == 1 else 0
             y = go if self._tp == 2 else 0
             self.set_start_coords(x+self._x, y+self._y)
@@ -48,9 +43,9 @@ class Ship:
 
         """
         o_x, o_y = other.get_start_coords()
-        # область чувствительности корабля
+        # область чувствительности нашего корабля
         x1, y1 = self._x - 1, self._y - 1
-        x2, y2 = self._x + self._length if self._tp == 1 else 1, self._y + self._length if self._tp == 2 else 1
+        x2, y2 = self._x + (self._length if self._tp == 1 else 1), self._y + (self._length if self._tp == 2 else 1)
 
         result = False
 
@@ -78,6 +73,9 @@ class Ship:
         return self._cells[item]
 
     def __setitem__(self, key, value):
+        if self._is_move and value == 2:
+            self._is_move = False   # при попадании, корабль перестаёт двигаться
+
         self._cells[key] = value
 
 
@@ -123,11 +121,31 @@ class GamePole:
         в направлении ориентации корабля; если перемещение в выбранную сторону невозможно (другой корабль или
         пределы игрового поля), то попытаться переместиться в противоположную сторону, иначе (если перемещения
         невозможны), оставаться на месте;"""
-
         pass
 
     def show(self):
-        pass
+        pole = self.get_pole()
+        for i in range(self._size):
+            print(*pole[i])
 
     def get_pole(self):
         """получение текущего игрового поля в виде двумерного (вложенного) кортежа размерами size x size элементов."""
+
+        pole = [[0 for _ in range(self._size)] for _ in range(self._size)]
+        for ship in self._ships:
+            x1, y1 = ship.get_start_coords()
+            if ship.tp == 1:
+                for x in range(x1, x1 + len(ship)):
+                    pole[y1][x] = 1
+
+            elif ship.tp == 2:
+                for y in range(y1, y1 + len(ship)):
+                    pole[y][x1] = 2
+
+        return pole
+
+
+gp = GamePole(10)
+gp.init()
+gp.show()
+print(len(gp.get_ships()))
