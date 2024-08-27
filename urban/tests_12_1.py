@@ -1,4 +1,4 @@
-from unittest import TestCase, main
+import unittest
 
 
 class Runner:
@@ -16,7 +16,7 @@ class Runner:
         return self.name
 
 
-class RunnerTest(TestCase):
+class RunnerTest(unittest.TestCase):
     def test_walk(self):
         runner = Runner("test_walk")
         for i in range(10): runner.walk()
@@ -38,4 +38,4 @@ class RunnerTest(TestCase):
 
 
 if __name__ == "__main__":
-    main()
+    unittest.main()
