@@ -1,4 +1,5 @@
 import math
+from pprint import pprint
 
 
 class Vertex:
@@ -43,6 +44,9 @@ class Link:
 
     def __hash__(self):
         return hash((hash(self.v1) * hash(self.v2))) # , self.dist))
+
+    def __repr__(self):
+        return f"l-{self.dist}"
 
 
 class Station(Vertex):
@@ -97,31 +101,60 @@ class LinkedGraph:
     def find_path(self, start_v, stop_v):
         """Возвращает список из вершин кратчайшего маршрута и список из связей этого же маршрута в виде кортежа"""
 
-        # # Заполним матрицу смежности
-        # D = []
-        # for v in self._vertex:
-        # return (self._vertex, self._links)
-        # VS = {}
-        # for v in self._vertex:
-        #     VS[v] = math.inf
-        #
-        # VS[start_v] = 0
-        graph = {}
-        graph[start_v] = {}
+        def find_lowest_cost_node(costs):
+            lowest_cost = math.inf
+            lowest_cost_node = None
+            for node in costs:   # перебрать все вершины
+                cost = costs[node]
+                if cost < lowest_cost and node not in processed:
+                    lowest_cost = cost
+                    lowest_cost_node = node
 
+            return lowest_cost_node
 
-        return [start_v]
+        graph = {} # хранится полный список вершин с соседями и весами
+        for v in self._vertex:
+            graph[v] = {}
+            for l in v.links:
+                graph[v][l.v1 if l.v1 != v else l.v2] = l.dist
+
+        costs = {} # таблица стоимостей
+        for l in start_v.links:
+            costs[l.v1 if l.v1 != start_v else l.v2] = l.dist
+        costs[stop_v] = math.inf
+
+        parents = {}  # хеш-таблица родителей
+        for l in start_v.links:
+            parents[l.v1 if l.v1 != start_v else l.v2] = start_v
+        parents[stop_v] = None
+
+        processed = [] # отслеживание отработанных процессов
+
+        node = find_lowest_cost_node(costs)
+        while node is not None: # пока не обработаны все вершины
+            cost = costs[node]
+            neighbors = graph[node]
+            for n in neighbors.keys(): # перебрать всех соседей текущей вершины
+                new_cost = cost + neighbors[n]
+                if costs[n] > new_cost:
+                    costs[n] = new_cost
+                    parents[n] = node
+
+            processed.append(node)
+            node = find_lowest_cost_node(costs)
+
+        return parents, costs
 
 
 map_graph = LinkedGraph()
 
-v1 = Vertex()
-v2 = Vertex()
-v3 = Vertex()
-v4 = Vertex()
-v5 = Vertex()
-v6 = Vertex()
-v7 = Vertex()
+v1 = Station("v1")
+v2 = Station("v2")
+v3 = Station("v3")
+v4 = Station("v4")
+v5 = Station("v5")
+v6 = Station("v6")
+v7 = Station("v7")
 
 # map_graph.add_link(Link(v1, v2))
 # map_graph.add_link(Link(v2, v3))
@@ -149,6 +182,7 @@ map_graph.add_link(Link(v3, v7, 11))
 print(len(map_graph._links))   # 9 связей
 print(len(map_graph._vertex))  # 7 вершин
 path = map_graph.find_path(v1, v5)
+pprint(path)
 
 # print("v1", v1.links)
 # print("v2", v2.links)
