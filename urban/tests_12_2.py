@@ -56,7 +56,7 @@ class TournamentTest(unittest.TestCase):
             print(res)
 
     def setUp(self):
-        self.distance = 90
+        self.distance = 4
         self.participants = {
             "Усэйн": Runner("Усэйн", 10),
             "Андрей": Runner("Андрей", 9),
@@ -69,26 +69,24 @@ class TournamentTest(unittest.TestCase):
         self.assertTrue(max_speed < self.distance, "Дистанция меньше, чем скорость самого быстрого участника. "
                                                    "Результаты могугут быть неверными")
 
+    def _test(self, name_test, *participants):
+        p = self.participants
+        tournament = Tournament(self.distance, *participants)
+        result = tournament.start()
+        TournamentTest.all_results[name_test] = result
+        return result
+
     def test_tournament_1(self):
         p = self.participants
-        tournament = Tournament(self.distance, p["Усэйн"], p["Ник"])
-        result = tournament.start()
-        TournamentTest.all_results["Тест_1"] = result
-        self.assertTrue(result[2] == "Ник")
+        self.assertTrue(self._test("test_1", p["Усэйн"], p["Ник"])[2] == "Ник")
 
     def test_tournament_2(self):
         p = self.participants
-        tournament = Tournament(self.distance, p["Андрей"], p["Ник"])
-        result = tournament.start()
-        TournamentTest.all_results["Тест_2"] = result
-        self.assertTrue(result[2] == "Ник")
+        self.assertTrue(self._test("test_2", p["Андрей"], p["Ник"])[2] == "Ник")
 
     def test_tournament_3(self):
         p = self.participants
-        tournament = Tournament(self.distance, *self.participants.values())
-        result = tournament.start()
-        TournamentTest.all_results["Тест_3"] = result
-        self.assertTrue(result[3] == "Ник")
+        self.assertTrue(self._test("test_3", *self.participants.values())[3] == "Ник")
 
 
 if __name__ == "__main__":
