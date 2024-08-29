@@ -15,6 +15,9 @@ class Runner:
     def __str__(self):
         return self.name
 
+    def __repr__(self):
+        return self.__str__()
+
     def __eq__(self, other):
         if isinstance(other, str):
             return self.name == other
@@ -47,32 +50,45 @@ class TournamentTest(unittest.TestCase):
     def setUpClass(cls):
         cls.all_results = {}
 
-    def setUp(self):
-        self.participants = (
-            Runner("Усэйн", 10),
-            Runner("Андрей", 9),
-            Runner("Ник", 3)
-        )
-
     @classmethod
     def tearDownClass(cls):
-        for participant, place in cls.all_results.items():
-            print(participant, place, sep='\t')
+        for res in cls.all_results.values():
+            print(res)
+
+    def setUp(self):
+        self.distance = 90
+        self.participants = {
+            "Усэйн": Runner("Усэйн", 10),
+            "Андрей": Runner("Андрей", 9),
+            "Ник": Runner("Ник", 3)
+        }
+
+    def test_speed(self):
+        max_speed = max([part.speed for part in self.participants.values()])
+        TournamentTest.all_results["Тест_0"] = {"dictance": self.distance, "max_speed": max_speed}
+        self.assertTrue(max_speed < self.distance, "Дистанция меньше, чем скорость самого быстрого участника. "
+                                                   "Результаты могугут быть неверными")
 
     def test_tournament_1(self):
-        tournament = Tournament(90, self.participants[0], self.participants[2])
-        TournamentTest.all_results = tournament.start()
-        self.assertTrue(TournamentTest.all_results[2] == "Ник")
+        p = self.participants
+        tournament = Tournament(self.distance, p["Усэйн"], p["Ник"])
+        result = tournament.start()
+        TournamentTest.all_results["Тест_1"] = result
+        self.assertTrue(result[2] == "Ник")
 
     def test_tournament_2(self):
-        tournament = Tournament(90, self.participants[1], self.participants[2])
-        TournamentTest.all_results = tournament.start()
-        self.assertTrue(TournamentTest.all_results[2] == "Ник")
+        p = self.participants
+        tournament = Tournament(self.distance, p["Андрей"], p["Ник"])
+        result = tournament.start()
+        TournamentTest.all_results["Тест_2"] = result
+        self.assertTrue(result[2] == "Ник")
 
     def test_tournament_3(self):
-        tournament = Tournament(90, *self.participants)
-        TournamentTest.all_results = tournament.start()
-        self.assertTrue(TournamentTest.all_results[3] == "Ник")
+        p = self.participants
+        tournament = Tournament(self.distance, *self.participants.values())
+        result = tournament.start()
+        TournamentTest.all_results["Тест_3"] = result
+        self.assertTrue(result[3] == "Ник")
 
 
 if __name__ == "__main__":
