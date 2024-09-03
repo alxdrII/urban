@@ -49,6 +49,7 @@ class TournamentTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.all_results = {}
+        cls.distance = 90
 
     @classmethod
     def tearDownClass(cls):
@@ -56,7 +57,6 @@ class TournamentTest(unittest.TestCase):
             print(res)
 
     def setUp(self):
-        self.distance = 4
         self.participants = {
             "Усэйн": Runner("Усэйн", 10),
             "Андрей": Runner("Андрей", 9),
@@ -65,7 +65,7 @@ class TournamentTest(unittest.TestCase):
 
     def test_speed(self):
         max_speed = max([part.speed for part in self.participants.values()])
-        TournamentTest.all_results["Тест_0"] = {"dictance": self.distance, "max_speed": max_speed}
+        TournamentTest.all_results["Тест_0"] = {"dictance": self.distance, "max_speed_participants": max_speed}
         self.assertTrue(max_speed < self.distance, "Дистанция меньше, чем скорость самого быстрого участника. "
                                                    "Результаты могугут быть неверными")
 
@@ -85,7 +85,6 @@ class TournamentTest(unittest.TestCase):
         self.assertTrue(self._test("test_2", p["Андрей"], p["Ник"])[2] == "Ник")
 
     def test_tournament_3(self):
-        p = self.participants
         self.assertTrue(self._test("test_3", *self.participants.values())[3] == "Ник")
 
 
