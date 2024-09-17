@@ -40,7 +40,5 @@ for rec in records:
     print("Имя: {1} | Почта: {2} | Возраст: {3} | Баланс: {4}".format(*rec))
 
 
-
-
 connection.commit()
 connection.close()
