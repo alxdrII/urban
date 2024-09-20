@@ -10,10 +10,16 @@ api = ""
 bot = Bot(token=api)
 dp = Dispatcher(bot, storage=MemoryStorage())
 
-kb = ReplyKeyboardMarkup(resize_keyboard=True)
-kb.add(KeyboardButton(text="Рассчитать"))
-kb.add(KeyboardButton(text="Информация"))
-kb.add(KeyboardButton(text="Купить"))
+kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text="Рассчитать"),
+            KeyboardButton(text="Информация")
+        ],
+        [KeyboardButton(text="Купить")]
+    ],
+    resize_keyboard=True
+)
 
 kbin = InlineKeyboardMarkup(
     inline_keyboard=[
@@ -21,7 +27,8 @@ kbin = InlineKeyboardMarkup(
             InlineKeyboardButton(text="Рассчитать норму калорий", callback_data="calories"),
             InlineKeyboardButton(text="Формулы расчёта", callback_data="formulas")
         ]
-    ]
+    ],
+    resize_keyboard=True
 )
 
 kbuy = InlineKeyboardMarkup(
@@ -32,9 +39,9 @@ kbuy = InlineKeyboardMarkup(
             InlineKeyboardButton(text="Product3", callback_data="product_buying"),
             InlineKeyboardButton(text="Product4", callback_data="product_buying")
         ]
-    ]
+    ],
+    resize_keyboard=True
 )
-
 
 
 class UserState(StatesGroup):
@@ -51,6 +58,22 @@ async def start(message):
 @dp.message_handler(text="Рассчитать")
 async def main_menu(message):
     await message.answer("Выберите опцию:", reply_markup=kbin)
+
+
+@dp.message_handler(text="Купить")
+async def get_buying_list(message):
+    for number in range(1, 5):
+        await message.answer(f"Название: Product{number} | Описание: описание {number} | Цена: {number * 100}")
+        with open(f"images/{number}.png", "rb") as img:
+            await message.answer_photo(img)
+
+    await message.answer("Выберите опцию:", reply_markup=kbuy)
+
+
+@dp.callback_query_handler(text="product_buying")
+async def ssend_confirm_message(call):
+    await call.message.answer("Вы успешно приобрели продукт!")
+    await call.answer()
 
 
 @dp.callback_query_handler(text="formulas")
@@ -97,7 +120,8 @@ async def send_calories(message, state):
 
 @dp.message_handler()
 async def all_message(message):
-    await message.answer("Нажмите кнопку 'Рассчитать',\nчтобы узнать о норме потребления калорий.")
+    await message.answer("Нажмите кнопку 'Рассчитать',\nчтобы узнать о норме потребления калорий.\n"
+                         "Либо команду /start для входа в главное меню")
 
 
 if __name__ == "__main__":
