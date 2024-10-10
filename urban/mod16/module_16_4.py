@@ -1,8 +1,9 @@
-from fastapi import FastAPI, Path
-from typing import Annotated
+from fastapi import FastAPI, Path, HTTPException
+from typing import Annotated, List
 from pydantic import BaseModel
 
 app = FastAPI()
+
 users = []
 
 ant_id = Annotated[int, Path(ge=1, le=100, description="Enter User ID", example="1")]
@@ -17,24 +18,35 @@ class User(BaseModel):
 
 
 @app.get('/users')
-async def get_all_users() -> dict:
+async def get_all_users() -> List[User]:
     return users
 
 
 @app.post('/user/{username}/{age}')
-async def add_user(username: ant_name, age: ant_age):
-    user_id = str(int(max(users, key=int)) + 1)
-    users[str(user_id)] = f"Имя: {username}, возраст: {age}"
-    return f"User {user_id} is registered"
+async def add_user(username: ant_name, age: ant_age) -> User:
+    user_id = max(users, key=lambda k: k.id).id + 1 if len(users) else 1
+    user = User(id=user_id, username=username, age=age)
+    users.append(User)
+    return user
 
 
-@app.put('/user/{user_id}/{username}/{age}')
-async def update_user(user_id: ant_id, username: ant_name, age: ant_age):
-    users[str(user_id)] = f"Имя: {username}, возраст: {age}"
-    return f"The user {user_id} has been updated"
-
-
-@app.delete('/user/{user_id}')
-async def del_user(user_id: ant_id):
-    users.pop(str(user_id))
-    return f"The user {user_id} has been deleted"
+# @app.put('/user/{user_id}/{username}/{age}')
+# async def update_user(user_id: ant_id, username: ant_name, age: ant_age) -> User:
+#     try:
+#         #users[user_id] = f"Имя: {username}, возраст: {age}"
+#
+#         return *
+#
+#     except IndexError:
+#         raise HTTPException(status_code=404, detail="User was not found")
+#
+#
+# @app.delete('/user/{user_id}')
+# async def del_user(user_id: ant_id) -> User:
+#     try:
+#         users.pop(user_id)
+#         return *
+#
+#     except IndexError:
+#         raise HTTPException(status_code=404, detail="User was not found")
+#
