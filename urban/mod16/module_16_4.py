@@ -26,27 +26,26 @@ async def get_all_users() -> List[User]:
 async def add_user(username: ant_name, age: ant_age) -> User:
     user_id = max(users, key=lambda k: k.id).id + 1 if len(users) else 1
     user = User(id=user_id, username=username, age=age)
-    users.append(User)
+    users.append(user)
     return user
 
 
-# @app.put('/user/{user_id}/{username}/{age}')
-# async def update_user(user_id: ant_id, username: ant_name, age: ant_age) -> User:
-#     try:
-#         #users[user_id] = f"Имя: {username}, возраст: {age}"
-#
-#         return *
-#
-#     except IndexError:
-#         raise HTTPException(status_code=404, detail="User was not found")
-#
-#
-# @app.delete('/user/{user_id}')
-# async def del_user(user_id: ant_id) -> User:
-#     try:
-#         users.pop(user_id)
-#         return *
-#
-#     except IndexError:
-#         raise HTTPException(status_code=404, detail="User was not found")
-#
+@app.put('/user/{user_id}/{username}/{age}')
+async def update_user(user_id: ant_id, username: ant_name, age: ant_age) -> User:
+    user = next((x for x in users if x.id == user_id), None)
+    if not user:
+        raise HTTPException(status_code=404, detail="User was not found")
+
+    user.username = username
+    user.age = age
+    return user
+
+
+@app.delete('/user/{user_id}')
+async def del_user(user_id: ant_id) -> User:
+    user = next((x for x in users if x.id == user_id), None)
+    if not user:
+        raise HTTPException(status_code=404, detail="User was not found")
+
+    users.remove(user)
+    return user
